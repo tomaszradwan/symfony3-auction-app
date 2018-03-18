@@ -8,6 +8,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Auction;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,27 +21,8 @@ class AuctionController extends Controller
      */
     public function indexAction()
     {
-        $auctions = [
-            [
-                'id' => 1,
-                'title' => 'table',
-                'description'=> 'description 1',
-                'price' => '1000 $',
-            ],
-            [
-                'id' => 2,
-                'title' => 'phone',
-                'description'=> 'description 2',
-                'price' => '350 $',
-            ],
-            [
-                'id' => 3,
-                'title' => 'computer',
-                'description'=> 'description 3',
-                'price' => '500 $',
-            ],
-
-        ];
+        $entityManager = $this->getDoctrine()->getManager();
+        $auctions = $entityManager->getRepository(Auction::class)->findAll();
 
         return $this->render("Auction/index.html.twig", ['auctions' => $auctions]);
     }
