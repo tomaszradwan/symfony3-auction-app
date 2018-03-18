@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Auction;
+use AppBundle\Form\AuctionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -48,17 +49,11 @@ class AuctionController extends Controller
     {
         $auction = new Auction();
 
-        $form = $this->createFormBuilder($auction)
-            ->add("title", TextType::class)
-            ->add("description", TextareaType::class)
-            ->add("price", NumberType::class)
-            ->add("submit", SubmitType::class)
-            ->getForm();
+        $form = $this->createForm(AuctionType::class, $auction);
 
         if ($request->isMethod("POST")) {
             $form->handleRequest($request);
 
-            $auction = $form->getData();
             $em = $this->getDoctrine()->getManager();
             $em->persist($auction);
             $em->flush();
