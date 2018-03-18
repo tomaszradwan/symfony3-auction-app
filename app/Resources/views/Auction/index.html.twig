@@ -4,7 +4,9 @@
     <h1>Auction list</h1>
 
     {% for auction in auctions %}
-        <h3><a href="{{ url('auction_details', {'id':auction.id}) }}">{{ auction.title }}</a></h3>
+        <h3>
+            <a href="{{ url('auction_details', {'id':auction.id}) }}">{{ auction.title }}</a>
+        </h3>
         <p>{{ auction.description }}</p>
         <p>{{ auction.price }}</p>
     {% endfor %}

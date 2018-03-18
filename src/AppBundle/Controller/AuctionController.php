@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Auction;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -27,33 +28,34 @@ class AuctionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $auctions = $em->getRepository(Auction::class)->findAll();
 
-        return $this->render("Auction/index.html.twig", ['auctions' => $auctions]);
+        return $this->render("Auction/index.html.twig", ["auctions" => $auctions]);
     }
 
     /**
      * @Route("/{id}", name="auction_details")
+     * @Template("Auction/details.html.twig")
      */
     public function detailsAuction($id)
     {
-        return $this->render("Auction/detail.html.twig");
+
     }
 
     /**
      * @Route("/auction/add", name="auction_add")
-     *
+     * @Template("Auction/add.html.twig")
      */
     public function addAction(Request $request)
     {
         $auction = new Auction();
 
         $form = $this->createFormBuilder($auction)
-            ->add('title', TextType::class)
-            ->add('description', TextareaType::class)
-            ->add('price', NumberType::class)
-            ->add('submit', SubmitType::class)
+            ->add("title", TextType::class)
+            ->add("description", TextareaType::class)
+            ->add("price", NumberType::class)
+            ->add("submit", SubmitType::class)
             ->getForm();
 
-        if ($request->isMethod('POST')) {
+        if ($request->isMethod("POST")) {
             $form->handleRequest($request);
 
             $auction = $form->getData();
@@ -61,10 +63,10 @@ class AuctionController extends Controller
             $em->persist($auction);
             $em->flush();
 
-            return $this->redirectToRoute('auction_index');
+            return $this->redirectToRoute("auction_index");
         }
 
-        return $this->render('Auction/add.html.twig', ['form' => $form->createView()]);
+        return ["form" => $form->createView()];
     }
 }
 
