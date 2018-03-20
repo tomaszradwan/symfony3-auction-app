@@ -1,13 +1,12 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: tomasz
+ * User: tomasz radwan
  * Date: 2018-03-18
  * Time: 16:08
  */
 
 namespace AppBundle\Form;
-
 
 use AppBundle\Entity\Auction;
 use Symfony\Component\Form\AbstractType;
