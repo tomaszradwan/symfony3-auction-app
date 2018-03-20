@@ -12,10 +12,6 @@ use AppBundle\Entity\Auction;
 use AppBundle\Form\AuctionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,27 +19,33 @@ class AuctionController extends Controller
 {
     /**
      * @Route("/", name="auction_index")
+     * @Template("Auction/index.html.twig")
+     * @return array
      */
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
         $auctions = $em->getRepository(Auction::class)->findAll();
 
-        return $this->render("Auction/index.html.twig", ["auctions" => $auctions]);
+        return ["auctions" => $auctions];
     }
 
     /**
      * @Route("/{id}", name="auction_details")
      * @Template("Auction/details.html.twig")
+     * @param Auction $auction
+     * @return array
      */
-    public function detailsAuction($id)
+    public function detailsAuction(Auction $auction)
     {
-
+        return ["auction"=> $auction];
     }
 
     /**
      * @Route("/auction/add", name="auction_add")
      * @Template("Auction/add.html.twig")
+     * @param Request $request
+     * @return array
      */
     public function addAction(Request $request)
     {
