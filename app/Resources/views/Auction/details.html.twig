@@ -1,5 +1,8 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-    <p>Test page for details.</p>
+    <h1>{{ auction.title }}</h1>
+    <p>{{ auction.description }}</p>
+    <p>{{ auction.price }}</p>
+    <a href="{{ url('auction_index') }}">Back to main page</a>
 {% endblock %}
