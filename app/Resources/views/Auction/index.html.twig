@@ -4,11 +4,19 @@
     <h1>Auction list</h1>
 
     {% for auction in auctions %}
-        <h3>
-            <a href="{{ url('auction_details', {'id':auction.id}) }}">{{ auction.title }}</a>
-        </h3>
-        <p>{{ auction.description }}</p>
-        <p>{{ auction.price }}</p>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>
+                    <a href="{{ url('auction_details', {'id':auction.id}) }}">{{ auction.title }}</a>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <p>{{ auction.description }}</p>
+            </div>
+            <ul class="list-group">
+                <li class="list-group-item">Price: $ {{ auction.price }} </li>
+            </ul>
+        </div>
     {% endfor %}
 
 {% endblock %}

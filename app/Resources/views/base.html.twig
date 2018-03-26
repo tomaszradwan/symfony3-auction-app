@@ -2,15 +2,34 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}Welcome Auction App!{% endblock %}</title>
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}"/>
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     </head>
     <body>
+        <div class="container" style="margin-top: 15px">
+            <ul class="nav nav-pills">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url('auction_index') }}">Auction</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url('auction_add') }}">Add auction</a>
+                </li>
+            </ul>
+        </div>
+
+        <hr>
+
         <div class="container">
             {% block body %}{% endblock %}
+        </div>
+
+        <hr>
+
+        <div class="container">
+            <p class="text-left">Created by Tomasz Radwan 2018</p>
         </div>
         {% block javascripts %}{% endblock %}
     </body>
