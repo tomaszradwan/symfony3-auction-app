@@ -45,7 +45,7 @@ class AuctionController extends Controller
      * @Route("/auction/add", name="auction_add")
      * @Template("Auction/add.html.twig")
      * @param Request $request
-     * @return array
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function addAction(Request $request)
     {
@@ -65,7 +65,33 @@ class AuctionController extends Controller
             $em->persist($auction);
             $em->flush();
 
-            return $this->redirectToRoute("auction_index");
+            return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
+        }
+
+        return ["form" => $form->createView()];
+    }
+
+    /**
+     * @Route("/auction/edit/{id}", name="auction_edit")
+     * @Template("Auction/edit.html.twig")
+     * @param Request $request
+     * @param Auction $auction
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function editAuction(Request $request, Auction $auction)
+    {
+        $form = $this->createForm(AuctionType::class, $auction);
+
+        if ($request->isMethod("POST")) {
+            $form->handleRequest($request);
+
+            $auction->setUpdatedAt(new \DateTime());
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($auction);
+            $em->flush();
+
+            return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
         }
 
         return ["form" => $form->createView()];
