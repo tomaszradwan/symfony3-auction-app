@@ -238,6 +238,5 @@ class Auction
         $this->status = $status;
         return $this;
     }
-
 }
 

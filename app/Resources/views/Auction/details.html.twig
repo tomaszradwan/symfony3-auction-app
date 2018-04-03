@@ -10,6 +10,8 @@
         </div>
         <ul class="list-group">
             <li class="list-group-item">Price: $ {{ auction.price }} </li>
+            <li class="list-group-item">Starting price: $ {{ auction.startPrice }} </li>
+            <li class="list-group-item">End date: {{ auction.expiresAt | date("Y-m-d H:m:s") }} </li>
         </ul>
     </div>
 

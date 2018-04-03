@@ -10,6 +10,7 @@ namespace AppBundle\Form;
 
 use AppBundle\Entity\Auction;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -22,10 +23,12 @@ class AuctionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add("title", TextType::class, ['label' => "Tytuł"])
-        ->add("description", TextareaType::class, ['label' => "Opis"])
-        ->add("price", NumberType::class, ['label' => "Cena"])
-        ->add("submit", SubmitType::class, ['label' => "Zapisz"]);
+        ->add("title", TextType::class, ['label' => "Title"])
+        ->add("description", TextareaType::class, ['label' => "Description"])
+        ->add("price", NumberType::class, ['label' => "Price"])
+        ->add("startPrice", NumberType::class, ['label' => "Starting price"])
+        ->add("expiresAt", DateTimeType::class, ['label' => "End date"])
+        ->add("submit", SubmitType::class, ['label' => "Save"]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
