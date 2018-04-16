@@ -56,10 +56,7 @@ class AuctionController extends Controller
         if ($request->isMethod("POST")) {
             $form->handleRequest($request);
 
-            $auction
-                ->setCreatedAt(new \DateTime())
-                ->setUpdatedAt(new \DateTime())
-                ->setStatus(Auction::STATUS_ACTIVE);
+            $auction->setStatus(Auction::STATUS_ACTIVE);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($auction);
@@ -84,8 +81,6 @@ class AuctionController extends Controller
 
         if ($request->isMethod("POST")) {
             $form->handleRequest($request);
-
-            $auction->setUpdatedAt(new \DateTime());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($auction);
