@@ -12,6 +12,7 @@ use AppBundle\Entity\Auction;
 use AppBundle\Form\AuctionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -38,7 +39,16 @@ class AuctionController extends Controller
      */
     public function detailsAuction(Auction $auction)
     {
-        return ["auction"=> $auction];
+        $deleteForm = $this->createFormBuilder()
+            ->setAction($this->generateUrl("auction_delete", ["id" => $auction->getId()]))
+            ->setMethod(Request::METHOD_DELETE)
+            ->add("submit", SubmitType::class,["label" => "Delete"])
+            ->getForm();
+
+        return [
+            "auction"=> $auction,
+            "deleteForm" => $deleteForm->createView()
+        ];
     }
 
     /**
@@ -93,7 +103,7 @@ class AuctionController extends Controller
     }
 
     /**
-     * @Route("/auction/delete/{id}", name="auction_delete")
+     * @Route("/auction/delete/{id}", name="auction_delete", methods={"DELETE"})
      * @param Auction $auction
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
