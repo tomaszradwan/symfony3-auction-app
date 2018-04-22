@@ -15,7 +15,18 @@
         </ul>
     </div>
 
-    <a class="btn btn-default" href="{{ url('auction_index') }}">Back to main page</a>
-    {{ form(deleteForm) }}
-    {{ form(finishForm) }}
+    <a class="btn btn-default pull-left" href="{{ url('auction_index') }}">Back to main page</a>
+    <a class="btn btn-info pull-left" href="{{ url('auction_edit', {"id": auction.id}) }}">Edit</a>
+
+    {{ form_start(deleteForm, {"attr": {"class": "pull-left"}}) }}
+        {{ form_widget(deleteForm.submit, {"attr": {"class": "btn-danger"}}) }}
+        {{ form_rest(deleteForm) }}
+    {{ form_end(deleteForm) }}
+
+    {{ form_start(finishForm, {"attr": {"class": "pull-left"}}) }}
+        {{ form_widget(finishForm.submit, {"attr": {"class": "btn-warning"}}) }}
+        {{ form_rest(finishForm) }}
+    {{ form_end(finishForm) }}
+
+    <div class="clearfix"></div>
 {% endblock %}

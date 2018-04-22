@@ -37,7 +37,7 @@ class AuctionController extends Controller
      * @param Auction $auction
      * @return array
      */
-    public function detailsAuction(Auction $auction):array
+    public function detailsAuction(Auction $auction)
     {
         $deleteForm = $this->createFormBuilder()
             ->setAction($this->generateUrl("auction_delete", ["id" => $auction->getId()]))
@@ -92,7 +92,7 @@ class AuctionController extends Controller
      * @param Auction $auction
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function editAuction(Request $request, Auction $auction):array
+    public function editAuction(Request $request, Auction $auction)
     {
         $form = $this->createForm(AuctionType::class, $auction);
 
