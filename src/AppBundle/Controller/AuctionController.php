@@ -91,5 +91,19 @@ class AuctionController extends Controller
 
         return ["form" => $form->createView()];
     }
+
+    /**
+     * @Route("/auction/delete/{id}", name="auction_delete")
+     * @param Auction $auction
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteAction(Auction $auction)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($auction);
+        $em->flush();
+
+        return $this->redirectToRoute("auction_index");
+    }
 }
 
