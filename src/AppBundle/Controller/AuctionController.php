@@ -32,7 +32,7 @@ class AuctionController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="auction_details")
+     * @Route("auction/details/{id}", name="auction_details")
      * @Template("Auction/details.html.twig")
      * @param Auction $auction
      * @return array
@@ -42,12 +42,19 @@ class AuctionController extends Controller
         $deleteForm = $this->createFormBuilder()
             ->setAction($this->generateUrl("auction_delete", ["id" => $auction->getId()]))
             ->setMethod(Request::METHOD_DELETE)
-            ->add("submit", SubmitType::class,["label" => "Delete"])
+            ->add("submit", SubmitType::class, ["label" => "Delete"])
+            ->getForm();
+
+        $finishForm = $this->createFormBuilder()
+            ->setAction($this->generateUrl("auction_finish", ["id" => $auction->getId()]))
+            ->setMethod(Request::METHOD_POST)
+            ->add("submit", SubmitType::class, ["label" => "Finish auction"])
             ->getForm();
 
         return [
             "auction"=> $auction,
-            "deleteForm" => $deleteForm->createView()
+            "deleteForm" => $deleteForm->createView(),
+            "finishForm" => $finishForm->createView(),
         ];
     }
 
@@ -57,7 +64,7 @@ class AuctionController extends Controller
      * @param Request $request
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function addAction(Request $request):array
+    public function addAction(Request $request)
     {
         $auction = new Auction();
 
@@ -114,6 +121,24 @@ class AuctionController extends Controller
         $em->flush();
 
         return $this->redirectToRoute("auction_index");
+    }
+
+    /**
+     * @Route("/auction/finish/{id}", name="auction_finish", methods={"POST"})
+     * @param Auction $auction
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function finishAction(Auction $auction)
+    {
+        $auction
+            ->setExpiresAt(new \DateTime())
+            ->setStatus(Auction::STATUS_FINISHED);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($auction);
+        $em->flush();
+
+        return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
     }
 }
 
