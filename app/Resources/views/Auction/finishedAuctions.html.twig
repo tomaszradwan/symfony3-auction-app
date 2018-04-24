@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <h4>{{ auction.title }}</h4>
+        </div>
+        <div class="panel-body">
+            <p>{{ auction.description }}</p>
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item">Price: $ {{ auction.price }} </li>
+            <li class="list-group-item">Starting price: $ {{ auction.startPrice }} </li>
+            <li class="list-group-item">Auction finished: {{ auction.expiresAt | date("Y-m-d H:m:s") }} </li>
+        </ul>
+    </div>
+
+    <a class="btn btn-default pull-left" href="{{ url('auction_index') }}">Back to main page</a>
+    <div class="clearfix"></div>
+{% endblock %}

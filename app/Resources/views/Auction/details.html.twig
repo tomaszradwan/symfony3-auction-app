@@ -15,7 +15,6 @@
         </ul>
     </div>
 
-    <a class="btn btn-default pull-left" href="{{ url('auction_index') }}">Back to main page</a>
     <a class="btn btn-info pull-left" href="{{ url('auction_edit', {"id": auction.id}) }}">Edit</a>
 
     {{ form_start(deleteForm, {"attr": {"class": "pull-left"}}) }}
@@ -34,4 +33,8 @@
     {{ form_end(buyForm) }}
 
     <div class="clearfix"></div>
+
+    <hr>
+
+    <a class="btn btn-default pull-left" href="{{ url('auction_index') }}">Back to main page</a>
 {% endblock %}

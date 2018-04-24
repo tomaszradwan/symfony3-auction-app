@@ -28,7 +28,9 @@ class OfferController extends Controller
             ->setType(Offer::TYPE_BUE)
             ->setPrice($auction->getPrice());
 
-        $auction->setStatus(Auction::STATUS_FINISHED);
+        $auction
+            ->setStatus(Auction::STATUS_FINISHED)
+            ->setExpiresAt(new \DateTime());
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($auction);
