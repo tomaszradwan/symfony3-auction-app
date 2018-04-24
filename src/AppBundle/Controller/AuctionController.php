@@ -23,7 +23,7 @@ class AuctionController extends Controller
      * @Template("Auction/index.html.twig")
      * @return array
      */
-    public function indexAction():array
+    public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
         $auctions = $em->getRepository(Auction::class)->findAll();
@@ -37,7 +37,7 @@ class AuctionController extends Controller
      * @param Auction $auction
      * @return array
      */
-    public function detailsAuction(Auction $auction)
+    public function detailsAction(Auction $auction)
     {
         $deleteForm = $this->createFormBuilder()
             ->setAction($this->generateUrl("auction_delete", ["id" => $auction->getId()]))
@@ -51,10 +51,17 @@ class AuctionController extends Controller
             ->add("submit", SubmitType::class, ["label" => "Finish auction"])
             ->getForm();
 
+        $buyForm = $this->createFormBuilder()
+            ->setAction($this->generateUrl("offer_buy", ["id" => $auction->getId()]))
+            ->setMethod(Request::METHOD_POST)
+            ->add("submit", SubmitType::class, ["label" => "Buy"])
+            ->getForm();
+
         return [
             "auction"=> $auction,
             "deleteForm" => $deleteForm->createView(),
             "finishForm" => $finishForm->createView(),
+            "buyForm" => $buyForm->createView(),
         ];
     }
 
