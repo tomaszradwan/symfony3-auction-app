@@ -28,5 +28,10 @@
         {{ form_rest(finishForm) }}
     {{ form_end(finishForm) }}
 
+    {{ form_start(buyForm, {"attr": {"class": "pull-left"}}) }}
+        {{ form_widget(buyForm.submit, {"attr": {"class": "btn-success"}}) }}
+        {{ form_rest(buyForm) }}
+    {{ form_end(buyForm) }}
+
     <div class="clearfix"></div>
 {% endblock %}
