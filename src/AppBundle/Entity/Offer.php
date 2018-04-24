@@ -49,6 +49,12 @@ class Offer
      */
     private $updateAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Auction", inversedBy="offers")
+     * @ORM\JoinColumn(name="auction_id", referencedColumnName="id")
+     * @var Auction
+     */
+    private $auction;
 
     /**
      * Get id
@@ -154,6 +160,25 @@ class Offer
     public function getUpdateAt()
     {
         return $this->updateAt;
+    }
+
+    /**
+     * @return Auction
+     */
+    public function getAuction()
+    {
+        return $this->auction;
+    }
+
+    /**
+     * @param Auction $auction
+     * @return $this
+     */
+    public function setAuction(Auction $auction)
+    {
+        $this->auction = $auction;
+
+        return $this;
     }
 }
 
