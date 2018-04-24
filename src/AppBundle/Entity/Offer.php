@@ -14,7 +14,6 @@ class Offer
 {
     /**
      * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,28 +22,24 @@ class Offer
 
     /**
      * @var string
-     *
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
      */
     private $price;
 
     /**
      * @var string
-     *
      * @ORM\Column(name="type", type="string", length=15)
      */
     private $type;
 
     /**
      * @var \DateTime
-     *
      * @ORM\Column(name="created_at", type="datetime")
      */
     private $createdAt;
 
     /**
      * @var \DateTime
-     *
      * @ORM\Column(name="update_at", type="datetime")
      */
     private $updateAt;
@@ -58,7 +53,6 @@ class Offer
 
     /**
      * Get id
-     *
      * @return int
      */
     public function getId()
@@ -68,9 +62,7 @@ class Offer
 
     /**
      * Set price
-     *
      * @param string $price
-     *
      * @return Offer
      */
     public function setPrice($price)
@@ -82,7 +74,6 @@ class Offer
 
     /**
      * Get price
-     *
      * @return string
      */
     public function getPrice()
@@ -92,9 +83,7 @@ class Offer
 
     /**
      * Set type
-     *
      * @param string $type
-     *
      * @return Offer
      */
     public function setType($type)
@@ -106,7 +95,6 @@ class Offer
 
     /**
      * Get type
-     *
      * @return string
      */
     public function getType()
@@ -116,9 +104,7 @@ class Offer
 
     /**
      * Set createdAt
-     *
      * @param \DateTime $createdAt
-     *
      * @return Offer
      */
     public function setCreatedAt($createdAt)
@@ -130,7 +116,6 @@ class Offer
 
     /**
      * Get createdAt
-     *
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -140,9 +125,7 @@ class Offer
 
     /**
      * Set updateAt
-     *
      * @param \DateTime $updateAt
-     *
      * @return Offer
      */
     public function setUpdateAt($updateAt)
@@ -154,7 +137,6 @@ class Offer
 
     /**
      * Get updateAt
-     *
      * @return \DateTime
      */
     public function getUpdateAt()
