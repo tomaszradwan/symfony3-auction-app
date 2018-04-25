@@ -13,7 +13,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Offer
 {
-    const TYPE_BUE = "buy";
+    const TYPE_BUY = "buy";
+    const TYPE_BID = "bid";
     const TYPE_AUCTION = "auction";
 
     /**

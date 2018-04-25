@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Auction;
 use AppBundle\Form\AuctionType;
+use AppBundle\Form\BidType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -63,11 +64,18 @@ class AuctionController extends Controller
             ->add("submit", SubmitType::class, ["label" => "Buy"])
             ->getForm();
 
+        $bidForm = $this->createForm(
+            BidType::class,
+            null,
+            ["action" => $this->generateUrl("offer_bid", ["id" => $auction->getId()])]
+        );
+
         return [
             "auction"=> $auction,
             "deleteForm" => $deleteForm->createView(),
             "finishForm" => $finishForm->createView(),
             "buyForm" => $buyForm->createView(),
+            "bidForm"=> $bidForm->createView(),
         ];
     }
 
