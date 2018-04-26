@@ -15,6 +15,17 @@
         </ul>
     </div>
 
+    <div class="panel panel-default">
+        <ul class="list-group">
+            {% for offer in auction.offers %}
+            <li class="list-group-item">
+                Offer: price $ {{ offer.price }} | bid date: {{ offer.createdAt |  date("Y-m-d H:m:s") }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
     <a class="btn btn-info pull-left" href="{{ url('auction_edit', {"id": auction.id}) }}">Edit</a>
 
     {{ form_start(deleteForm, {"attr": {"class": "pull-left"}}) }}
