@@ -100,6 +100,8 @@ class AuctionController extends Controller
             $em->persist($auction);
             $em->flush();
 
+            $this->addFlash("success", "Auction {$auction->getTitle()} add successfully.");
+
             return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
         }
 
@@ -124,6 +126,8 @@ class AuctionController extends Controller
             $em->persist($auction);
             $em->flush();
 
+            $this->addFlash("success", "Auction {$auction->getTitle()} edit successfully.");
+
             return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
         }
 
@@ -140,6 +144,8 @@ class AuctionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->remove($auction);
         $em->flush();
+
+        $this->addFlash("success", "Auction {$auction->getTitle()} deleted.");
 
         return $this->redirectToRoute("auction_index");
     }
@@ -158,6 +164,8 @@ class AuctionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($auction);
         $em->flush();
+
+        $this->addFlash("success", "Auction {$auction->getTitle()} finished.");
 
         return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
     }
