@@ -21,5 +21,5 @@ Application has:
 
 User can create new auction, add title, description, price, starting price and end date.
 
-
+Every new bid user will see on the list on particular auction.
 
