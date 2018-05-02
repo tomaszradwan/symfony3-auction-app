@@ -94,15 +94,18 @@ class AuctionController extends Controller
         if ($request->isMethod("POST")) {
             $form->handleRequest($request);
 
-            $auction->setStatus(Auction::STATUS_ACTIVE);
+            if ($form->isValid()) {
+                $auction->setStatus(Auction::STATUS_ACTIVE);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($auction);
-            $em->flush();
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($auction);
+                $em->flush();
 
-            $this->addFlash("success", "Auction {$auction->getTitle()} add successfully.");
+                $this->addFlash("success", "Auction {$auction->getTitle()} add successfully.");
 
-            return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
+                return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
+            }
+            $this->addFlash("error", "You cannot add auction!");
         }
 
         return ["form" => $form->createView()];
