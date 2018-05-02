@@ -27,7 +27,10 @@ class AuctionType extends AbstractType
         ->add("description", TextareaType::class, ['label' => "Description"])
         ->add("price", NumberType::class, ['label' => "Price"])
         ->add("startPrice", NumberType::class, ['label' => "Starting price"])
-        ->add("expiresAt", DateTimeType::class, ['label' => "End date"])
+        ->add("expiresAt", DateTimeType::class, [
+            'label' => "End date",
+            "data" => new \DateTime("+1 day + 15 minutes")
+        ])
         ->add("submit", SubmitType::class, ['label' => "Save"]);
     }
 

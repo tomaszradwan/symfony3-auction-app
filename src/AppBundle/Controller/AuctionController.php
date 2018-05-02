@@ -14,6 +14,7 @@ use AppBundle\Form\BidType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -93,6 +94,12 @@ class AuctionController extends Controller
 
         if ($request->isMethod("POST")) {
             $form->handleRequest($request);
+
+            if ($auction->getStartPrice() >= $auction->getPrice()) {
+                $form
+                    ->get("startPrice")
+                    ->addError(new FormError("Starting price cannot be greater than sales price"));
+            }
 
             if ($form->isValid()) {
                 $auction->setStatus(Auction::STATUS_ACTIVE);
