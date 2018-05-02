@@ -67,11 +67,19 @@ class OfferController extends Controller
                 ->getRepository(Offer::class)
                 ->findOneBy(["auction" => $auction], ["createdAt" => "DESC"]);
 
-            if (isset($lastOffer)
+            if (!isset($lastOffer)
+                && ($offer->getPrice() <= $auction->getStartPrice())) {
+                $this->addFlash(
+                    "error",
+                    "Offer price is lower than starting price.");
+
+                return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
+            }
+            elseif (isset($lastOffer)
                 && ($offer->getPrice() <= $lastOffer->getPrice())) {
                 $this->addFlash(
                     "error",
-                    "Your offer cannot be lower then {$lastOffer->getPrice()}");
+                    "Your offer cannot be lower than {$lastOffer->getPrice()}");
 
                 return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
             }
@@ -85,7 +93,7 @@ class OfferController extends Controller
 
             $this->addFlash(
                 "success",
-                "You bid the item {$auction->getTitle()} for the amount $ {$auction->getPrice()}"
+                "You bid the item {$auction->getTitle()} for the amount $ {$offer->getPrice()}"
             );
         } else {
             $this->addFlash("error", "You cannot bid object {$auction->getTitle()}");
