@@ -38,18 +38,24 @@ class Auction
     /**
      * @var string
      * @ORM\Column(name="description", type="text")
+     * @Assert\NotBlank(message="Description should not be blank.")
+     * @Assert\Length(min="10", minMessage="Minimum length 10 characters.")
      */
     private $description;
 
     /**
      * @var string
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
+     * @Assert\NotBlank(message="Price should not be blank.")
+     * @Assert\GreaterThan(value="0", message="Price should be greater than 0")
      */
     private $price;
 
     /**
      * @var float
      * @ORM\Column(name="start_price", type="decimal", precision=10, scale=2)
+     * @Assert\NotBlank(message="Starting price should not be blank.")
+     * @Assert\GreaterThan(value="0", message="Starting price should be greater than 0")
      */
     private $startPrice;
 
@@ -70,6 +76,8 @@ class Auction
     /**
      * @var \DateTime
      * @ORM\Column(name="expires_at", type="datetime")
+     * @Assert\NotBlank(message="Expires at should not be blank.")
+     * @Assert\GreaterThan(value="+1 day", message="The auction can not end at less than 24 hours.")
      */
     private $expiresAt;
 
