@@ -60,18 +60,36 @@ class OfferController extends Controller
 
         $bidForm->handleRequest($request);
 
-        $offer
-            ->setType(Offer::TYPE_BID)
-            ->setAuction($auction);
+        if ($bidForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($offer);
-        $em->flush();
+            $lastOffer = $em
+                ->getRepository(Offer::class)
+                ->findOneBy(["auction" => $auction], ["createdAt" => "DESC"]);
 
-        $this->addFlash(
-            "success",
-            "You bid the item {$auction->getTitle()} for the amount $ {$auction->getPrice()}"
-        );
+            if (isset($lastOffer)
+                && ($offer->getPrice() <= $lastOffer->getPrice())) {
+                $this->addFlash(
+                    "error",
+                    "Your offer cannot be lower then {$lastOffer->getPrice()}");
+
+                return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
+            }
+
+            $offer
+                ->setType(Offer::TYPE_BID)
+                ->setAuction($auction);
+
+            $em->persist($offer);
+            $em->flush();
+
+            $this->addFlash(
+                "success",
+                "You bid the item {$auction->getTitle()} for the amount $ {$auction->getPrice()}"
+            );
+        } else {
+            $this->addFlash("error", "You cannot bid object {$auction->getTitle()}");
+        }
 
         return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
     }
