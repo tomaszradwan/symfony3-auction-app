@@ -20,6 +20,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AuctionType extends AbstractType
 {
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -34,6 +38,9 @@ class AuctionType extends AbstractType
         ->add("submit", SubmitType::class, ['label' => "Save"]);
     }
 
+    /**
+     * @param OptionsResolver $resolver
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(["data_class" => Auction::class]);
