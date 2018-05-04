@@ -63,6 +63,12 @@ class Offer
     private $auction;
 
     /**
+     * @var User
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="offers")
+     */
+    private $owner;
+
+    /**
      * Get id
      * @return int
      */
@@ -172,6 +178,25 @@ class Offer
         $this->auction = $auction;
 
         return $this;
+    }
+
+    /**
+     * @param User $owner
+     * @return $this
+     */
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwner()
+    {
+        return $this->owner;
     }
 }
 

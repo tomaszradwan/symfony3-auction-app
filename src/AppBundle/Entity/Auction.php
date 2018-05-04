@@ -91,9 +91,14 @@ class Auction
     /**
      * @var Offer[]
      * @ORM\OneToMany(targetEntity="Offer", mappedBy="auction")
-     *
      */
     private $offers;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="auctions")
+     * @var User
+     */
+    private $owner;
 
     /**
      * @return Offer[]|ArrayCollection
@@ -287,6 +292,25 @@ class Auction
     {
         $this->status = $status;
         return $this;
+    }
+
+    /**
+     * @param User $owner
+     * @return $this
+     */
+    public function setOwner(User $owner)
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwner()
+    {
+        return $this->owner;
     }
 }
 
