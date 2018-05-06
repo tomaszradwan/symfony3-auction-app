@@ -19,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AuctionController extends Controller
 {
@@ -106,7 +107,9 @@ class AuctionController extends Controller
             }
 
             if ($form->isValid()) {
-                $auction->setStatus(Auction::STATUS_ACTIVE);
+                $auction
+                    ->setStatus(Auction::STATUS_ACTIVE)
+                    ->setOwner($this->getUser());
 
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($auction);
@@ -131,6 +134,8 @@ class AuctionController extends Controller
      */
     public function editAuction(Request $request, Auction $auction)
     {
+        $this->isUserLoggedAndOwner($auction);
+
         $form = $this->createForm(AuctionType::class, $auction);
 
         if ($request->isMethod("POST")) {
@@ -155,6 +160,8 @@ class AuctionController extends Controller
      */
     public function deleteAction(Auction $auction)
     {
+        $this->isUserLoggedAndOwner($auction);
+
         $em = $this->getDoctrine()->getManager();
         $em->remove($auction);
         $em->flush();
@@ -171,6 +178,8 @@ class AuctionController extends Controller
      */
     public function finishAction(Auction $auction)
     {
+        $this->isUserLoggedAndOwner($auction);
+
         $auction
             ->setExpiresAt(new \DateTime())
             ->setStatus(Auction::STATUS_FINISHED);
@@ -183,5 +192,15 @@ class AuctionController extends Controller
 
         return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
     }
-}
 
+    /**
+     * @param Auction $auction
+     */
+    private function isUserLoggedAndOwner(Auction $auction) {
+        $this->denyAccessUnlessGranted("ROLE_USER");
+
+        if ($this->getUser() !== $auction->getOwner()) {
+            throw new AccessDeniedException();
+        }
+    }
+}
