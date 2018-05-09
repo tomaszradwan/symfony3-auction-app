@@ -25,7 +25,7 @@
         </ul>
     </div>
 
-    <a class="btn btn-info pull-left" href="{{ url('auction_edit', {"id": auction.id}) }}">Edit</a>
+    <a class="btn btn-info pull-left" href="{{ url('my_auction_edit', {"id": auction.id}) }}">Edit</a>
 
     {{ form_start(deleteForm, {"attr": {"class": "pull-left"}}) }}
         {{ form_widget(deleteForm.submit, {"attr": {"class": "btn-danger"}}) }}

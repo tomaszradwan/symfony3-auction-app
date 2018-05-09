@@ -11,11 +11,13 @@ declare(strict_types=1);
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Auction;
+use AppBundle\Form\AuctionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class MyAuctionController extends Controller
 {
@@ -65,5 +67,86 @@ class MyAuctionController extends Controller
             "deleteForm" => $deleteForm->createView(),
             "finishForm" => $finishForm->createView(),
         ];
+    }
+
+    /**
+     * @Route("my/auction/add", name="my_auction_add")
+     * @Template("MyAuction/add.html.twig")
+     * @param Request $request
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function addAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted("ROLE_USER");
+
+        $auction = new Auction();
+
+        $form = $this->createForm(AuctionType::class, $auction);
+
+        if ($request->isMethod("POST")) {
+            $form->handleRequest($request);
+
+            if ($auction->getStartPrice() >= $auction->getPrice()) {
+                $form
+                    ->get("startPrice")
+                    ->addError(new FormError("Starting price cannot be greater than sales price"));
+            }
+
+            if ($form->isValid()) {
+                $auction
+                    ->setStatus(Auction::STATUS_ACTIVE)
+                    ->setOwner($this->getUser());
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($auction);
+                $em->flush();
+
+                $this->addFlash("success", "Auction {$auction->getTitle()} add successfully.");
+
+                return $this->redirectToRoute("my_auction_details", ["id" => $auction->getId()]);
+            }
+            $this->addFlash("error", "You cannot add auction!");
+        }
+
+        return ["form" => $form->createView()];
+    }
+
+    /**
+     * @Route("my/auction/edit/{id}", name="my_auction_edit")
+     * @Template("MyAuction/edit.html.twig")
+     * @param Request $request
+     * @param Auction $auction
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function editAuction(Request $request, Auction $auction)
+    {
+        $this->isUserLoggedAndOwner($auction);
+
+        $form = $this->createForm(AuctionType::class, $auction);
+
+        if ($request->isMethod("POST")) {
+            $form->handleRequest($request);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($auction);
+            $em->flush();
+
+            $this->addFlash("success", "Auction {$auction->getTitle()} edit successfully.");
+
+            return $this->redirectToRoute("my_auction_details", ["id" => $auction->getId()]);
+        }
+
+        return ["form" => $form->createView()];
+    }
+
+    /**
+     * @param Auction $auction
+     */
+    private function isUserLoggedAndOwner(Auction $auction) {
+        $this->denyAccessUnlessGranted("ROLE_USER");
+
+        if ($this->getUser() !== $auction->getOwner()) {
+            throw new AccessDeniedException();
+        }
     }
 }
