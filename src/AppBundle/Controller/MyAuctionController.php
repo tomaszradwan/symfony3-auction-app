@@ -46,18 +46,20 @@ class MyAuctionController extends Controller
      */
     public function detailsAction(Auction $auction)
     {
+        $this->denyAccessUnlessGranted("ROLE_USER");
+
         if ($auction->getStatus() === Auction::STATUS_FINISHED) {
-            return $this->render("Auction/finishedAuctions.html.twig", ["auction" => $auction]);
+            return $this->render("MyAuction/finishedAuctions.html.twig", ["auction" => $auction]);
         }
 
         $deleteForm = $this->createFormBuilder()
-            ->setAction($this->generateUrl("auction_delete", ["id" => $auction->getId()]))
+            ->setAction($this->generateUrl("my_auction_delete", ["id" => $auction->getId()]))
             ->setMethod(Request::METHOD_DELETE)
             ->add("submit", SubmitType::class, ["label" => "Delete"])
             ->getForm();
 
         $finishForm = $this->createFormBuilder()
-            ->setAction($this->generateUrl("auction_finish", ["id" => $auction->getId()]))
+            ->setAction($this->generateUrl("my_auction_finish", ["id" => $auction->getId()]))
             ->setMethod(Request::METHOD_POST)
             ->add("submit", SubmitType::class, ["label" => "Finish auction"])
             ->getForm();
@@ -137,6 +139,46 @@ class MyAuctionController extends Controller
         }
 
         return ["form" => $form->createView()];
+    }
+
+    /**
+     * @Route("my/auction/delete/{id}", name="my_auction_delete", methods={"DELETE"})
+     * @param Auction $auction
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function deleteAction(Auction $auction)
+    {
+        $this->isUserLoggedAndOwner($auction);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($auction);
+        $em->flush();
+
+        $this->addFlash("success", "Auction {$auction->getTitle()} deleted.");
+
+        return $this->redirectToRoute("my_auction_index");
+    }
+
+    /**
+     * @Route("my/auction/finish/{id}", name="my_auction_finish", methods={"POST"})
+     * @param Auction $auction
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function finishAction(Auction $auction)
+    {
+        $this->isUserLoggedAndOwner($auction);
+
+        $auction
+            ->setExpiresAt(new \DateTime())
+            ->setStatus(Auction::STATUS_FINISHED);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($auction);
+        $em->flush();
+
+        $this->addFlash("success", "Auction {$auction->getTitle()} finished.");
+
+        return $this->redirectToRoute("my_auction_details", ["id" => $auction->getId()]);
     }
 
     /**

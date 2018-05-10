@@ -11,12 +11,10 @@ declare(strict_types=1);
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Auction;
-use AppBundle\Form\AuctionType;
 use AppBundle\Form\BidType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -50,7 +48,6 @@ class AuctionController extends Controller
             return $this->render("Auction/finishedAuctions.html.twig", ["auction" => $auction]);
         }
 
-
         $buyForm = $this->createFormBuilder()
             ->setAction($this->generateUrl("offer_buy", ["id" => $auction->getId()]))
             ->setMethod(Request::METHOD_POST)
@@ -68,46 +65,6 @@ class AuctionController extends Controller
             "buyForm" => $buyForm->createView(),
             "bidForm"=> $bidForm->createView(),
         ];
-    }
-
-    /**
-     * @Route("/auction/delete/{id}", name="auction_delete", methods={"DELETE"})
-     * @param Auction $auction
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function deleteAction(Auction $auction)
-    {
-        $this->isUserLoggedAndOwner($auction);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($auction);
-        $em->flush();
-
-        $this->addFlash("success", "Auction {$auction->getTitle()} deleted.");
-
-        return $this->redirectToRoute("auction_index");
-    }
-
-    /**
-     * @Route("/auction/finish/{id}", name="auction_finish", methods={"POST"})
-     * @param Auction $auction
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function finishAction(Auction $auction)
-    {
-        $this->isUserLoggedAndOwner($auction);
-
-        $auction
-            ->setExpiresAt(new \DateTime())
-            ->setStatus(Auction::STATUS_FINISHED);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($auction);
-        $em->flush();
-
-        $this->addFlash("success", "Auction {$auction->getTitle()} finished.");
-
-        return $this->redirectToRoute("auction_details", ["id" => $auction->getId()]);
     }
 
     /**
