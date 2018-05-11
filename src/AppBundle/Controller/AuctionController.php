@@ -61,16 +61,17 @@ class AuctionController extends Controller
         );
 
         return [
-            "auction"=> $auction,
+            "auction" => $auction,
             "buyForm" => $buyForm->createView(),
-            "bidForm"=> $bidForm->createView(),
+            "bidForm" => $bidForm->createView(),
         ];
     }
 
     /**
      * @param Auction $auction
      */
-    private function isUserLoggedAndOwner(Auction $auction) {
+    private function isUserLoggedAndOwner(Auction $auction)
+    {
         $this->denyAccessUnlessGranted("ROLE_USER");
 
         if ($this->getUser() !== $auction->getOwner()) {

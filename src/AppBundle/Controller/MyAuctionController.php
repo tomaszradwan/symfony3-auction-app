@@ -65,7 +65,7 @@ class MyAuctionController extends Controller
             ->getForm();
 
         return [
-            "auction"=> $auction,
+            "auction" => $auction,
             "deleteForm" => $deleteForm->createView(),
             "finishForm" => $finishForm->createView(),
         ];
@@ -184,7 +184,8 @@ class MyAuctionController extends Controller
     /**
      * @param Auction $auction
      */
-    private function isUserLoggedAndOwner(Auction $auction) {
+    private function isUserLoggedAndOwner(Auction $auction)
+    {
         $this->denyAccessUnlessGranted("ROLE_USER");
 
         if ($this->getUser() !== $auction->getOwner()) {
