@@ -25,19 +25,26 @@
         </ul>
     </div>
 
-
-    <a class="btn btn-info pull-left" href="{{ url('my_auction_edit', {"id": auction.id}) }}">Edit</a>
-
-    {{ form_start(buyForm, {"attr": {"class": "pull-left"}}) }}
-        {{ form_widget(buyForm.submit, {"attr": {"class": "btn-success"}}) }}
-        {{ form_rest(buyForm) }}
-    {{ form_end(buyForm) }}
+    {% if is_granted("ROLE_USER") %}
+        {{ form_start(buyForm, {"attr": {"class": "pull-left"}}) }}
+            {{ form_widget(buyForm.submit, {"attr": {"class": "btn-success"}}) }}
+            {{ form_rest(buyForm) }}
+        {{ form_end(buyForm) }}
+    {% endif %}
 
     <div class="clearfix"></div>
 
-    <hr>
-    {{ form(bidForm, {"attr": {"novalidate": "novalidate"}}) }}
-    <hr>
+    {% if is_granted("ROLE_USER") %}
+        <hr>
+            {{ form(bidForm, {"attr": {"novalidate": "novalidate"}}) }}
+        <hr>
+    {% endif %}
+
+    {# DELETE CODE BELOW #}
+    {% if not is_granted("ROLE_USER") %}
+        <div>You need to log in if you want to buy a product.</div>
+    {% endif %}
 
     <a class="btn btn-default pull-left" href="{{ url('auction_index') }}">Back to main page</a>
+
 {% endblock %}
