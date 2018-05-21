@@ -21,6 +21,16 @@ class DateExtension extends \Twig_Extension
     }
 
     /**
+     * @return array|\Twig_SimpleFunction[]
+     */
+    public function getFunctions()
+    {
+        return [
+            new \Twig_SimpleFunction("auctionStyle", [$this, "auctionStyle"])
+        ];
+    }
+
+    /**
      * @param \DateTime $expiresAt
      * @return string
      */
@@ -28,16 +38,43 @@ class DateExtension extends \Twig_Extension
     {
         $currentDate = new \DateTime();
 
-        if ($expiresAt < new \DateTime('- 7 days')) {
+        if (($expiresAt < $currentDate)
+            || ($expiresAt < new \DateTime('-7 days'))) {
             return $expiresAt->format("Y-m-d H:i");
         }
 
         if ($expiresAt->diff($currentDate)->format('%d') > 0) {
             return " in "
-                . ($expiresAt->format('d') - $currentDate->format('d'))
-                . " days";
+                . $expiresAt->diff($currentDate)->format('%d')
+                . " day(s)";
         }
 
-        return "in " . $expiresAt->diff($currentDate)->format('%h hours %i minutes');
+        return "in " . $currentDate->diff($expiresAt)->format('%h hour(s) %i minutes');
+    }
+
+    /**
+     * @param \DateTime $expiresAt
+     * @return string
+     */
+    public function auctionStyle(\DateTime $expiresAt)
+    {
+
+        if ($this->dateIsInBetween(new \DateTime(), new \DateTime('+1 day'), $expiresAt)) {
+            return "panel-danger";
+        }
+
+        return "panel-default";
+    }
+
+    /**
+     * @param \DateTime $from
+     * @param \DateTime $to
+     * @param \DateTime $userDate
+     * @return bool
+     */
+    public function dateIsInBetween(\DateTime $from, \DateTime $to, \DateTime $userDate)
+    {
+        return ($userDate->getTimestamp() > $from->getTimestamp())
+                && ($userDate->getTimestamp() < $to->getTimestamp()) ? true : false;
     }
 }
