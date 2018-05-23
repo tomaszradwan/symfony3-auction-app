@@ -58,7 +58,6 @@ class DateExtension extends \Twig_Extension
      */
     public function auctionStyle(\DateTime $expiresAt)
     {
-
         if ($this->dateIsInBetween(new \DateTime(), new \DateTime('+1 day'), $expiresAt)) {
             return "panel-danger";
         }
