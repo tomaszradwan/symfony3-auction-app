@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Auction;
+
 /**
  * AuctionRepository
  *
@@ -10,4 +12,19 @@ namespace AppBundle\Repository;
  */
 class AuctionRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @return array
+     */
+    public function findActiveOrdered()
+    {
+        return $this
+            ->createQueryBuilder("a")
+            ->where("a.status = :active")
+            ->setParameter("active", Auction::STATUS_ACTIVE)
+            ->andWhere("a.expiresAt > :now")
+            ->setParameter(":now", new \DateTime())
+            ->orderBy("a.expiresAt", "ASC")
+            ->getQuery()
+            ->getResult();
+    }
 }

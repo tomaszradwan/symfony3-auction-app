@@ -31,7 +31,7 @@ class AuctionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $auctions = $em
             ->getRepository(Auction::class)
-            ->findBy(["status" => Auction::STATUS_ACTIVE]);
+            ->findActiveOrdered();
 
         return ["auctions" => $auctions];
     }
