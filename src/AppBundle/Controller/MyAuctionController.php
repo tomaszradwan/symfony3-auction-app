@@ -33,7 +33,7 @@ class MyAuctionController extends Controller
 
         $auctions = $em
             ->getRepository(Auction::class)
-            ->findBy(["owner" => $this->getUser()]);
+            ->findMyOrdered($this->getUser());
 
         return $this->render("MyAuction/index.html.twig", ["auctions" => $auctions]);
     }
