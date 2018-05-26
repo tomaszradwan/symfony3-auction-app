@@ -43,7 +43,22 @@ class AuctionRepository extends \Doctrine\ORM\EntityRepository
                 WHERE a.owner = :owner
                 ORDER BY a.expiresAt ASC"
             )
-            ->setParameter(":owner", $owner)
+            ->setParameter("owner", $owner)
+            ->getResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function findActiveExpired()
+    {
+        return $this
+            ->createQueryBuilder("a")
+            ->where("a.status = :status")
+            ->setParameter("status", Auction::STATUS_ACTIVE)
+            ->andWhere("a.expiresAt < :now")
+            ->setParameter("now", new \DateTime())
+            ->getQuery()
             ->getResult();
     }
 }
