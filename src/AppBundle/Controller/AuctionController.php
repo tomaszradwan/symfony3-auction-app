@@ -12,6 +12,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Auction;
 use AppBundle\Form\BidType;
+use AppBundle\Service\DateService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -22,16 +23,21 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class AuctionController extends Controller
 {
     /**
+     * @param DateService $dateService
      * @Route("/", name="auction_index")
      * @Template("Auction/index.html.twig")
      * @return array
      */
-    public function indexAction()
+    public function indexAction(DateService $dateService)
     {
         $em = $this->getDoctrine()->getManager();
         $auctions = $em
             ->getRepository(Auction::class)
             ->findActiveOrdered();
+
+        $logger = $this->get("logger");
+        $logger->info("--> User opened indexAction." . PHP_EOL);
+        $logger->info("--> Today is " . $dateService->getDate(new \DateTime()));
 
         return ["auctions" => $auctions];
     }
