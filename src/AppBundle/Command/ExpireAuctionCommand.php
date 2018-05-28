@@ -9,12 +9,24 @@
 namespace AppBundle\Command;
 
 use AppBundle\Entity\Auction;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ExpireAuctionCommand extends ContainerAwareCommand
+class ExpireAuctionCommand extends Command
 {
+    /**
+     * @var
+     */
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        parent::__construct();
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * (@inheritdoc)
      */
@@ -29,28 +41,25 @@ class ExpireAuctionCommand extends ContainerAwareCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return int|null|void
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this
-            ->getContainer()
-            ->get("doctrine.orm.entity_manager");
-
-        $auctions = $em
+        $auctions = $this->entityManager
             ->getRepository(Auction::class)
             ->findActiveExpired();
 
-        $output->writeln(sprintf("Found <info>%d</info> auction(s) to closed", count($auctions)));
+        $output->writeln(
+            sprintf("Found <info>%d</info> auction(s) to closed",
+                count($auctions))
+        );
 
         foreach ($auctions as $auction) {
             $auction->setStatus(Auction::STATUS_FINISHED);
-            $em->persist($auction);
+            $this->entityManager->persist($auction);
         }
 
-        $em->flush();
+        $this->entityManager->flush();
 
         $output->writeln("Auctions updated!");
-
     }
 }
