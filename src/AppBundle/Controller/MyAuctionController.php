@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Auction;
+use AppBundle\EventDispatcher\AuctionEvent;
+use AppBundle\EventDispatcher\Events;
 use AppBundle\Form\AuctionType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -103,6 +105,8 @@ class MyAuctionController extends Controller
                 $em->persist($auction);
                 $em->flush();
 
+                $this->get("event_dispatcher")->dispatch(Events::AUCTION_ADD, new AuctionEvent($auction));
+
                 $this->addFlash("success", "Auction {$auction->getTitle()} add successfully.");
 
                 return $this->redirectToRoute("my_auction_details", ["id" => $auction->getId()]);
@@ -133,6 +137,8 @@ class MyAuctionController extends Controller
             $em->persist($auction);
             $em->flush();
 
+            $this->get("event_dispatcher")->dispatch(Events::AUCTION_EDIT, new AuctionEvent($auction));
+
             $this->addFlash("success", "Auction {$auction->getTitle()} edit successfully.");
 
             return $this->redirectToRoute("my_auction_details", ["id" => $auction->getId()]);
@@ -153,6 +159,8 @@ class MyAuctionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->remove($auction);
         $em->flush();
+
+        $this->get("event_dispatcher")->dispatch(Events::AUCTION_DELETE, new AuctionEvent($auction));
 
         $this->addFlash("success", "Auction {$auction->getTitle()} deleted.");
 
@@ -175,6 +183,8 @@ class MyAuctionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($auction);
         $em->flush();
+
+        $this->get("event_dispatcher")->dispatch(Events::AUCTION_FINISH, new AuctionEvent($auction));
 
         $this->addFlash("success", "Auction {$auction->getTitle()} finished.");
 
